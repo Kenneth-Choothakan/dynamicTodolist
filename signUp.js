@@ -22,7 +22,7 @@ export default function SignUp({navigation}) {
     const submit = async () => {
         console.log('calling')
         try{
-            const result = await axios.post('https://216e-67-160-237-70.ngrok-free.app/api/auth/register', {
+            const result = await axios.post('https://51f4-73-222-172-16.ngrok-free.app/api/auth/register', {
                 fullName: "kjfndfjvndsf",
                 username: username,
                 password:password

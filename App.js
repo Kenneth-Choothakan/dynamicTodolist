@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StyleSheet, Text, View, TextInput, Button, SafeAreaView } from 'react-native';
-import { useState, useContext, useEffect } from 'react';
+import { useState, useContext, useEffect, useLayoutEffect } from 'react';
 import { AntDesign } from '@expo/vector-icons';
 import {AuthContext} from './context/auth-context'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -33,29 +33,44 @@ const AuthenticatedStack = () => {
   )
 }
 
-
 export default function App(){
+  return (
+    <AuthContextProvider>
+        <Root/>
+    </AuthContextProvider>
+  )
+}
+function Root(){
   const [userToken, setUserToken] = useState(null)
-
+  const context = useContext(AuthContext)
+  
   useEffect(() => {
+    console.log('CONTEXT: ', context.token)
     const myFunc = async () => {
       let res = await AsyncStorage.getItem('token')
-      console.log('KEYS???: ',typeof res)
-      return res
+      console.log('KEYS???: ', res)
+      setUserToken(res)
     }
     myFunc();
   })
-  
-  const renderStack = userToken !== null? <AuthenticatedStack /> : <AuthStack />
-  return (
-    <>
-     <StatusBar style="light" />
-    <AuthContextProvider>
+
+  if(userToken === null){
+    console.log('RUNNING!!!')
+    return (
+    
       <NavigationContainer>
-        {renderStack}
+        <AuthStack />
       </NavigationContainer>
-    </AuthContextProvider>
-    </>
+    
+    )
+  }
+  
+  //const renderStack = userToken !== null? <AuthenticatedStack /> : <AuthStack />
+  return (
+      <NavigationContainer>
+        <AuthenticatedStack />
+      </NavigationContainer>
+    
   );
 
 }

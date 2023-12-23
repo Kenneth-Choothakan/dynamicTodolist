@@ -11,26 +11,24 @@ export const AuthContext = createContext({
 const AuthContextProvider = ({ children }) => {
     const [authToken, setAuthToken] = useState(null)
 
-    useEffect(() => {
-     console.log("Auth token: ", authToken !== null)   
-    })
-
     const authenticate = async (token) => {
-        setAuthToken(token)
-        await AsyncStorage.setItem('token', token)
+       await AsyncStorage.setItem('token', token)
+       setAuthToken(token)
     }
 
-    const logout = () => {
-        setAuthToken(null)
-        AsyncStorage.removeItem('token')
+    const logout = async () => {
+        await AsyncStorage.removeItem('token')
+        setAuthToken(null)   
     }
-
+    
     const value = {
         token: authToken,
         isAuthenticated: authToken !== null? true: false,
         authenticate: authenticate,
         logout: logout
     }
+
+    console.log('CONTEXT 0', value.token)
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }

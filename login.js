@@ -22,11 +22,10 @@ export default function Login({navigation}) {
     }
     async function submit() {
         try{
-            const result = await axios.post('https://1d6a-73-222-172-16.ngrok-free.app/api/auth/login', {
+            const result = await axios.post('https://51f4-73-222-172-16.ngrok-free.app/api/auth/login', {
                 username: username,
                 password: password
             });
-            console.log("This is from login: ",result)
             const user = result.data
             console.log("User data: ", user)
             authContext.authenticate("hello")

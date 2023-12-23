@@ -1,22 +1,24 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
 import { useEffect, useState } from 'react';
+import { useContext } from 'react';
 import { AntDesign } from '@expo/vector-icons';
 import axios from 'axios';
-
-export default function Home(props) {
+import { AuthContext } from './context/auth-context';
+export default function Home({navigation}) {
     //console.log("HOME SCREEN: ", props)
     let[titles,setTitles] = useState('')
     let[details,setDetails] = useState('')
     let[list,setList] = useState([])
     let [error, setError] = useState(false)
-    let userId = props.route.params.user.id
+    const context = useContext(AuthContext)
+    //let userId = props.route.params.user.id
 
     useEffect(() => {
     
         const fetchTodosFromUser = async () => {
             try{
-                const result = await axios.get(`https://216e-67-160-237-70.ngrok-free.app/api/todos/getTodos/${userId}`)
+                const result = await axios.get(`https://51f4-73-222-172-16.ngrok-free.app/api/todos/getTodos/${userId}`)
 
             let todos = result.data.map((todo) => {
                 return (<View>
@@ -67,28 +69,36 @@ export default function Home(props) {
       
     }
 
+    function logout() {
+        context.logout()
+        
+    }
+
     if(error){
         return (
             <View>
         <View>
-            <Text>Welcome  {props.route.params.user['username']}</Text>
+            {/* <Text>Welcome  {props.route.params.user['username']}</Text> */}
         </View>
         <View><Text>You dont have any posts</Text></View>
         <TextInput placeholder='Title' onChangeText={(val) => {changeTitles(val)}}/>
         <TextInput placeholder='Details' onChangeText={(val) => {changeDetails(val)}}/>
         <Button title='Submit' onPress={submit}/>
+        <Button title='Log out' onPress={logout}/>
         </View>
         )
     }
+   
     return (
         <View>
         <View>
-            <Text>Welcome  {props.route.params.user['username']}</Text>
+            {/* <Text>Welcome  {props.route.params.user['username']}</Text> */}
         </View>
         <TextInput placeholder='Title' onChangeText={(val) => {changeTitles(val)}}/>
         <TextInput placeholder='Details' onChangeText={(val) => {changeDetails(val)}}/>
         <Button title='Submit' onPress={submit}/>
-        <Text>{todos}</Text>
+        {/* <Text>{todos}</Text> */}
+        <Button title='Log out' onPress={logout}/>
         </View>
     );
     
