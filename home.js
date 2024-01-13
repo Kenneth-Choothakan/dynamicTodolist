@@ -7,7 +7,6 @@ import axios from 'axios';
 import { AuthContext } from './context/auth-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function Home() {
-    //console.log("HOME SCREEN: ", props)
     let[titles,setTitles] = useState('')
     let[details,setDetails] = useState('')
     let[list,setList] = useState([])
