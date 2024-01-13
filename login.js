@@ -22,13 +22,13 @@ export default function Login({navigation}) {
     }
     async function submit() {
         try{
-            const result = await axios.post('https://51f4-73-222-172-16.ngrok-free.app/api/auth/login', {
+            const result = await axios.post('https://9092-73-222-172-16.ngrok-free.app/api/auth/login', {
                 username: username,
                 password: password
             });
             const user = result.data
             console.log("User data: ", user)
-            authContext.authenticate("hello")
+            authContext.authenticate(user.id + "")   
           
         } catch(error) {
             setMessage('Username or password is incorrect')

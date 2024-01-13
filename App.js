@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StyleSheet, Text, View, TextInput, Button, SafeAreaView } from 'react-native';
-import { useState, useContext, useEffect, useLayoutEffect } from 'react';
+import { useState, useContext, createContext, useEffect, useLayoutEffect } from 'react';
 import { AntDesign } from '@expo/vector-icons';
 import {AuthContext} from './context/auth-context'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -10,7 +10,6 @@ import AuthContextProvider from './context/auth-context';
 import SignUp from './signUp';
 import Home from './home';
 import Login from './login';
-
 const Stack = createNativeStackNavigator()
 
 const AuthStack = () => {
@@ -40,6 +39,8 @@ export default function App(){
     </AuthContextProvider>
   )
 }
+
+
 function Root(){
   const [userToken, setUserToken] = useState(null)
   const context = useContext(AuthContext)

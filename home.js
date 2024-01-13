@@ -5,41 +5,54 @@ import { useContext } from 'react';
 import { AntDesign } from '@expo/vector-icons';
 import axios from 'axios';
 import { AuthContext } from './context/auth-context';
-export default function Home({navigation}) {
+import AsyncStorage from '@react-native-async-storage/async-storage';
+export default function Home() {
     //console.log("HOME SCREEN: ", props)
     let[titles,setTitles] = useState('')
     let[details,setDetails] = useState('')
     let[list,setList] = useState([])
     let [error, setError] = useState(false)
-    const context = useContext(AuthContext)
+    let[userId, setUserId] = useState(null)
+    let[todoData, setTodoData] = useState(null)
+    const authContext = useContext(AuthContext)
     //let userId = props.route.params.user.id
+    useEffect(() => {
+        async function getId() {
+            let res = await AsyncStorage.getItem("token")
+            console.log("home token: ", res)
+            setUserId(res)
+        }
+        getId()
+        console.log('RESULT USERID: ', userId)
+    }, [])
 
     useEffect(() => {
-    
         const fetchTodosFromUser = async () => {
+            console.log('calling get todos')
             try{
-                const result = await axios.get(`https://51f4-73-222-172-16.ngrok-free.app/api/todos/getTodos/${userId}`)
-
-            let todos = result.data.map((todo) => {
+                const result = await axios.get(`https://9092-73-222-172-16.ngrok-free.app/api/todolist/getTodos/${userId}`)
+        
+            let todos = result.data.data.map((todo) => {
                 return (<View>
-                    <Text>{todo.title}</Text>
-                    <Button title='remove' onPress={remove(val)} val={todo.id}/>
+                    <Text>{todo['title']}</Text>
                 </View>)
             })
-
+            
+            setTodoData(todos)
             }catch(e){
-                setError(true)
+                
+                console.log('ERROR FROM FETCH!!!!!!: ', e.message) //
+                //setError(true)
             }
             
         }
 
         fetchTodosFromUser()
-
     }, [])
 
     async function remove(id) {
         try{
-            const result = await axios.post(`https://216e-67-160-237-70.ngrok-free.app/api/todos/removeTodo/${id}`)
+            const result = await axios.post(`https://9092-73-222-172-16.ngrok-free.app/api/todolist/removeTodo/${id}`)
         } catch(e) {
             console.log('remove error: ', e)
         }
@@ -57,24 +70,27 @@ export default function Home({navigation}) {
         const new_post = {
             title: titles,
             detail: details,
-            postedby: userId
+            user_id: userId
             }
+
+            console.log('submit user id: ', new_post.user_id)
         try{
-            let result = await axios.post('https://216e-67-160-237-70.ngrok-free.app/api/todolist/createTodo', new_post)
-            console.log("Result from home: ", result)
+            let result = await axios.post('https://9092-73-222-172-16.ngrok-free.app/api/todolist/createTodo', new_post)
+            console.log("Result from home: ", result.data)
         }
         catch(err){
+            console.log('ERROR FROM SUBMIT: ', e)
             console.log(err)
         }
-      
-    }
-
-    function logout() {
-        context.logout()
         
     }
 
+    function logout() {
+        authContext.logout()
+    }
+
     if(error){
+        console.log('ERROR RUNNING')
         return (
             <View>
         <View>
@@ -92,6 +108,7 @@ export default function Home({navigation}) {
     return (
         <View>
         <View>
+            <Text>{todoData === null? 0: todoData}</Text>
             {/* <Text>Welcome  {props.route.params.user['username']}</Text> */}
         </View>
         <TextInput placeholder='Title' onChangeText={(val) => {changeTitles(val)}}/>

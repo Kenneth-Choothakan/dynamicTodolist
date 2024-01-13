@@ -17,8 +17,9 @@ app.use(cors())
 app.use(express.json())
 app.use(cookieParser())
 app.use('/api/auth', authRouter)
-app.use('/api/todos', todoRouter)
-app.use('/', (req, res) => {
-    return res.send('hjvbhdfbvdf')
-})
+app.use('/api/todolist', todoRouter)
+// app.use('/', (req, res) => {
+//     console.log('home route')
+//     return res.send('hjvbhdfbvdf')
+// })
 app.listen(8800, () => console.log('Listening on port: 8800'))
